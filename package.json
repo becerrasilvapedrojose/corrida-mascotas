@@ -1,0 +1,7 @@
+{
+  "name": "corrida-mascotas",
+  "private": true,
+  "version": "1.0.0",
+  "engines": { "node": ">=18" },
+  "dependencies": { "@supabase/supabase-js": "^2.45.0" }
+}

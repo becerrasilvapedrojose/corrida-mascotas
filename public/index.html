@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>7ª Corrida Familiar con Mascotas 2026</title>
+<link rel="icon" href="/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--lime:#daff02;--lime-d:#c4e800;--tint:#f6ffc9;--ink:#12160a;--mut:#596238;--line:#dbe8a0}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Poppins,system-ui,sans-serif;color:var(--ink);background:#fff;min-height:100vh;line-height:1.5}
+[hidden]{display:none!important}
+header.top{background:var(--lime);border-bottom:3px solid var(--ink);display:flex;align-items:center;gap:14px;padding:10px 20px}
+header.top img{width:54px;height:54px;border-radius:50%;display:block}
+header.top h1{font-size:1.05rem;font-weight:800;margin:0;line-height:1.2;flex:1}
+header.top h1 small{display:block;font-weight:500;font-size:.78rem}
+.btn{font:600 1rem Poppins,system-ui,sans-serif;background:var(--lime);color:var(--ink);border:2.5px solid var(--ink);border-radius:12px;padding:.65rem 1.25rem;cursor:pointer;box-shadow:0 3px 0 var(--ink);transition:transform .08s,box-shadow .08s,background .15s}
+.btn:hover{background:var(--lime-d)}
+.btn:active{transform:translateY(3px);box-shadow:0 0 0 var(--ink)}
+.btn.alt{background:#fff}.btn.alt:hover{background:var(--tint)}
+.btn.sm{padding:.35rem .9rem;font-size:.85rem;box-shadow:0 2px 0 var(--ink)}
+.btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+main{max-width:760px;margin:0 auto;padding:28px 18px 60px}
+input,select{font:500 1rem Poppins,system-ui,sans-serif;color:var(--ink);background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:.65rem .9rem;width:100%}
+input:focus,select:focus{outline:none;background:var(--tint)}
+
+/* login */
+#login{text-align:center;padding-top:16px}
+#login .big{width:170px;height:170px;border-radius:50%;margin-bottom:8px}
+#login h2{font-size:1.5rem;font-weight:800;margin:.2rem 0 .1rem}
+#login p{margin:0 0 22px;color:var(--mut)}
+#login form{max-width:340px;margin:0 auto;display:grid;gap:12px;text-align:left}
+#login label span{display:block;font-weight:600;font-size:.85rem;margin-bottom:3px}
+.err{color:#7a1d10;font-weight:600;min-height:1.4em;margin:0}
+
+/* home */
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.chip{background:var(--tint);border:2px solid var(--ink);border-radius:999px;padding:.2rem .9rem;font-weight:600;font-size:.88rem}
+.chip b{font-weight:800}
+.searchrow{display:grid;grid-template-columns:1fr;gap:12px}
+#q{font-size:1.15rem;padding:.9rem 1.1rem;border-radius:14px}
+.btns{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+#results{margin-top:16px;display:grid;gap:8px}
+.res{display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left;width:100%;background:#fff;border:2px solid var(--line);border-radius:12px;padding:.6rem .9rem;cursor:pointer;font:inherit;color:inherit}
+.res:hover{border-color:var(--ink)}
+.res.on{border-color:var(--ink);background:var(--tint);box-shadow:0 3px 0 var(--ink)}
+.res strong{display:block;font-weight:700}
+.res span.s{font-size:.85rem;color:var(--mut)}
+.badge{font-size:.75rem;font-weight:700;background:var(--lime);border:2px solid var(--ink);border-radius:999px;padding:0 .6rem;white-space:nowrap}
+.hint{color:var(--mut);font-size:.9rem;text-align:center;margin-top:14px}
+
+/* form */
+#formv h2{font-size:1.4rem;font-weight:800;margin:0 0 4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0}
+.fld span{display:block;font-weight:600;font-size:.82rem;margin-bottom:3px}
+.chk{grid-column:1/-1;display:flex;gap:10px;align-items:flex-start;font-size:.82rem;background:var(--tint);border:2px solid var(--line);border-radius:12px;padding:.6rem .8rem}
+.chk input{width:20px;height:20px;margin-top:3px;accent-color:#12160a;flex:none}
+.formact{display:flex;justify-content:flex-end;gap:12px}
+
+/* modal */
+#modal{position:fixed;inset:0;background:rgba(18,22,10,.55);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.box{background:#fff;border:3px solid var(--ink);border-radius:18px;max-width:640px;width:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 6px 0 var(--ink)}
+.box .head{background:var(--lime);border-bottom:3px solid var(--ink);padding:12px 18px;display:flex;gap:12px;align-items:center}
+.box .head img{width:42px;height:42px;border-radius:50%}
+.box .head h2{margin:0;font-size:1.1rem;font-weight:800;line-height:1.25}
+.box .body{padding:14px 18px;overflow:auto}
+.box .body p{margin:.3rem 0}
+.mut{color:var(--mut)}
+dl{margin:0;display:grid;grid-template-columns:minmax(120px,38%) 1fr;gap:0}
+dt,dd{margin:0;padding:.4rem 0;border-bottom:1px solid var(--line);font-size:.86rem}
+dt{font-weight:600;color:var(--mut);padding-right:10px}
+dd{word-break:break-word}
+.box .actions{display:flex;justify-content:flex-end;gap:12px;padding:12px 18px;border-top:3px solid var(--ink);background:var(--tint)}
+.qty{display:flex;gap:10px;align-items:center;justify-content:center;margin:12px 0}
+.qty input{width:90px;text-align:center;font-size:1.4rem;font-weight:700}
+.center{text-align:center}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:.7rem 1.2rem;border-radius:12px;font-weight:600;z-index:20;max-width:90vw}
+#toast.bad{background:#7a1d10}
+@media(max-width:560px){.grid{grid-template-columns:1fr}.btns{grid-template-columns:1fr}dl{grid-template-columns:1fr}dt{border-bottom:0;padding-bottom:0}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <img src="/logo.png" alt="Fundación Rescate de Mascotas Chile">
+  <h1>7ª Corrida Familiar con Mascotas 2026<small>Fundación Rescate de Mascotas Chile</small></h1>
+  <button class="btn sm alt" id="logout" hidden>Salir</button>
+</header>
+
+<main>
+  <!-- LOGIN -->
+  <section id="login">
+    <img class="big" src="/logo.png" alt="Logo Fundación Rescate de Mascotas Chile">
+    <h2>Control de asistencia</h2>
+    <p>Ingresa con el usuario de la fundación</p>
+    <form id="lf">
+      <label><span>Usuario</span><input id="lu" autocomplete="username" autocapitalize="none" required></label>
+      <label><span>Clave</span><input id="lp" type="password" autocomplete="current-password" required></label>
+      <p class="err" id="le"></p>
+      <button class="btn" type="submit">Ingresar</button>
+    </form>
+  </section>
+
+  <!-- HOME -->
+  <section id="home" hidden>
+    <div class="stats">
+      <span class="chip">Inscritos: <b id="s-tot">0</b></span>
+      <span class="chip">Confirmados: <b id="s-conf">0</b></span>
+      <span class="chip">Poleras disponibles: <b id="s-pol">0</b></span>
+    </div>
+    <div class="searchrow">
+      <input id="q" placeholder="Buscar por nombre, RUT, perro, teléfono, correo…" autocomplete="off">
+      <div class="btns">
+        <button class="btn" id="b-search">Buscar</button>
+        <button class="btn alt" id="b-new">Inscribir</button>
+        <button class="btn alt" id="b-exp">Exportar</button>
+      </div>
+    </div>
+    <div id="results"></div>
+    <p class="hint" id="hint">Escribe para ver coincidencias, elige una y presiona Enter o Buscar.</p>
+  </section>
+
+  <!-- FORM -->
+  <section id="formv" hidden>
+    <h2>Nueva inscripción</h2>
+    <span class="mut">Completa los datos del participante y su mascota.</span>
+    <form id="f">
+      <div class="grid" id="fields"></div>
+      <div class="formact">
+        <button type="button" class="btn alt" id="f-cancel">Cancelar</button>
+        <button type="submit" class="btn">Finalizar inscripción</button>
+      </div>
+    </form>
+  </section>
+</main>
+
+<div id="modal" hidden></div>
+<div id="toast" hidden></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const norm = s => String(s ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const SYS = ['id', 'created_at', 'asistencia_confirmada', 'polera_cantidad'];
+
+let token = sessionStorage.getItem('tk') || '';
+let rows = [], cols = [], restantes = 0, results = [], hi = 0, saving = false;
+const C = {};
+
+/* ---------- utilidades ---------- */
+async function api(path, body) {
+  const r = await fetch('/api/' + path, {
+    method: body ? 'POST' : 'GET',
+    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401 && path !== 'login') { logout(); throw new Error('Sesión expirada'); }
+  if (!r.ok) throw new Error(j.error || 'Error');
+  return j;
+}
+function toast(msg, bad) {
+  const t = $('#toast'); t.textContent = msg; t.className = bad ? 'bad' : ''; t.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 3200);
+}
+const label = c => { const s = c.replace(/_/g, ' '); return s.charAt(0).toUpperCase() + s.slice(1); };
+function show(view) {
+  ['login', 'home', 'formv'].forEach(v => $('#' + v).hidden = v !== view);
+  $('#logout').hidden = view === 'login';
+  window.scrollTo(0, 0);
+}
+function showModal(title, body, actions) {
+  $('#modal').innerHTML = `<div class="box" role="dialog" aria-modal="true">
+    <div class="head"><img src="/logo.png" alt=""><h2>${title}</h2></div>
+    <div class="body">${body}</div><div class="actions">${actions}</div></div>`;
+  $('#modal').hidden = false;
+}
+function closeModal() { $('#modal').hidden = true; $('#modal').innerHTML = ''; }
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#modal').hidden && !saving) closeModal(); });
+
+/* ---------- login ---------- */
+$('#lf').addEventListener('submit', async e => {
+  e.preventDefault(); $('#le').textContent = '';
+  try {
+    const j = await api('login', { user: $('#lu').value, pass: $('#lp').value });
+    token = j.token; sessionStorage.setItem('tk', token);
+    await enter();
+  } catch (err) { $('#le').textContent = err.message; }
+});
+function logout() {
+  token = ''; sessionStorage.removeItem('tk'); closeModal();
+  $('#lp').value = ''; show('login');
+}
+$('#logout').onclick = logout;
+
+/* ---------- datos ---------- */
+async function loadData() {
+  const d = await api('data');
+  rows = d.rows; restantes = d.restantes;
+  cols = rows.length
+    ? Object.keys(rows[0]).filter(c => !SYS.includes(c) && rows.some(r => r[c] !== null && r[c] !== ''))
+    : [];
+  const f = (...res) => cols.find(c => res.some(re => re.test(norm(c)))) || null;
+  C.name = f(/nombre.?completo/, /nombre/) || cols[0];
+  C.rut = f(/(^|[^a-z])rut([^a-z]|$)/);
+  C.dog = f(/nombre.?del.?perro/, /perro/);
+  rows.forEach(r => {
+    r._s = norm(cols.map(c => r[c]).join(' '));
+    r._r = r._s.replace(/[.\-+\s]/g, '');
+  });
+  $('#s-tot').textContent = rows.length;
+  $('#s-conf').textContent = rows.filter(r => r.asistencia_confirmada).length;
+  $('#s-pol').textContent = restantes;
+  runSearch();
+}
+async function enter() {
+  try { await loadData(); show('home'); $('#q').focus(); }
+  catch (err) { if (token) toast(err.message, true); }
+}
+
+/* ---------- búsqueda ---------- */
+function runSearch() {
+  const q = norm($('#q').value).trim();
+  if (!q) { results = []; }
+  else {
+    const ws = q.split(/\s+/);
+    results = rows.filter(r => ws.every(w => {
+      const w2 = w.replace(/[.\-+]/g, '');
+      return r._s.includes(w) || (w2 && r._r.includes(w2));
+    })).slice(0, 40);
+  }
+  hi = 0; renderResults(q);
+}
+function renderResults(q) {
+  const box = $('#results');
+  $('#hint').hidden = !!q;
+  if (q && !results.length) { box.innerHTML = '<p class="hint">Sin coincidencias. Puedes usar Inscribir.</p>'; return; }
+  box.innerHTML = results.map((r, i) => `
+    <button class="res ${i === hi ? 'on' : ''}" data-i="${i}">
+      <div><strong>${esc(r[C.name])}</strong>
+      <span class="s">${esc([C.rut && r[C.rut], C.dog && r[C.dog]].filter(Boolean).join('  |  '))}</span></div>
+      ${r.asistencia_confirmada ? '<span class="badge">Confirmado</span>' : ''}
+    </button>`).join('');
+}
+$('#q').addEventListener('input', runSearch);
+$('#q').addEventListener('keydown', e => {
+  if (e.key === 'ArrowDown' && results.length) { e.preventDefault(); hi = Math.min(hi + 1, results.length - 1); renderResults(1); scrollHi(); }
+  else if (e.key === 'ArrowUp' && results.length) { e.preventDefault(); hi = Math.max(hi - 1, 0); renderResults(1); scrollHi(); }
+  else if (e.key === 'Enter') { e.preventDefault(); openSelected(); }
+});
+const scrollHi = () => document.querySelector('.res.on')?.scrollIntoView({ block: 'nearest' });
+$('#results').addEventListener('click', e => {
+  const b = e.target.closest('.res'); if (!b) return;
+  hi = +b.dataset.i; renderResults($('#q').value); $('#q').focus();
+});
+$('#results').addEventListener('dblclick', e => { if (e.target.closest('.res')) openSelected(); });
+$('#b-search').onclick = openSelected;
+function openSelected() {
+  if (!results.length) { toast('Escribe algo y elige un registro', true); return; }
+  openDetail(results[hi]);
+}
+
+/* ---------- detalle + confirmar ---------- */
+function openDetail(r) {
+  const conf = r.asistencia_confirmada === true;
+  const state = conf
+    ? `<p><span class="badge">Asistencia confirmada${r.polera_cantidad ? ' · ' + r.polera_cantidad + ' polera(s)' : ''}</span></p>` : '';
+  const dl = cols.map(c => `<dt>${esc(label(c))}</dt><dd>${esc(r[c] ?? '')}</dd>`).join('');
+  showModal(esc(r[C.name]), state + `<dl>${dl}</dl>`,
+    `<button class="btn alt" id="m-close">Cerrar</button><button class="btn" id="m-ok" ${conf ? 'disabled' : ''}>Confirmar</button>`);
+  $('#m-close').onclick = closeModal;
+  $('#m-ok').onclick = () => askPolera(n => doConfirm(r, n));
+}
+function askPolera(cb) {
+  if (restantes <= 0) { cb(0); return; }
+  showModal('¿Recibe polera?', `<p class="center">Quedan <b>${restantes}</b> poleras disponibles.</p>`,
+    `<button class="btn alt" id="p-no">No</button><button class="btn" id="p-si">Sí</button>`);
+  $('#p-no').onclick = () => cb(0);
+  $('#p-si').onclick = () => {
+    showModal('¿Cuántas poleras?',
+      `<div class="qty"><button class="btn alt" id="q-m" aria-label="menos">−</button>
+       <input id="q-n" type="number" min="1" max="${restantes}" value="1">
+       <button class="btn alt" id="q-p" aria-label="más">+</button></div>
+       <p class="center mut">Máximo ${restantes}</p>`,
+      `<button class="btn alt" id="q-back">Volver</button><button class="btn" id="q-go">Guardar</button>`);
+    const inp = $('#q-n'), clamp = v => Math.min(restantes, Math.max(1, parseInt(v, 10) || 1));
+    $('#q-m').onclick = () => inp.value = clamp(+inp.value - 1);
+    $('#q-p').onclick = () => inp.value = clamp(+inp.value + 1);
+    $('#q-back').onclick = () => askPolera(cb);
+    $('#q-go').onclick = () => cb(clamp(inp.value));
+    inp.focus(); inp.select();
+  };
+}
+async function doConfirm(r, n) {
+  if (saving) return; saving = true;
+  try {
+    await api('confirm', { id: r.id, cantidad: n });
+    toast('Asistencia confirmada' + (n ? ` · ${n} polera(s)` : ''));
+    closeModal();
+  } catch (err) { toast(err.message, true); closeModal(); }
+  saving = false;
+  await loadData().catch(() => {});
+  $('#q').focus();
+}
+
+/* ---------- inscribir ---------- */
+function buildForm() {
+  $('#fields').innerHTML = cols.map((c, i) => {
+    const vals = [...new Set(rows.map(r => r[c]).filter(v => v !== null && v !== '').map(String))];
+    const long = vals.some(v => v.length > 60);
+    if (vals.length === 1 && vals[0].length > 40)
+      return `<label class="chk"><input type="checkbox" data-i="${i}" data-v="${esc(vals[0])}" required><span>${esc(vals[0])}</span></label>`;
+    const req = c === C.name ? 'required' : '';
+    if (vals.length <= 10 && !long)
+      return `<label class="fld"><span>${esc(label(c))}</span><select data-i="${i}" ${req}><option value=""></option>${vals.sort().map(v => `<option>${esc(v)}</option>`).join('')}</select></label>`;
+    const num = rows.every(r => r[c] === null || r[c] === '' || typeof r[c] === 'number');
+    return `<label class="fld"><span>${esc(label(c))}</span><input data-i="${i}" ${num ? 'type="number" inputmode="numeric"' : ''} ${req}></label>`;
+  }).join('');
+}
+$('#b-new').onclick = () => { buildForm(); show('formv'); };
+$('#f-cancel').onclick = () => show('home');
+$('#f').addEventListener('submit', e => {
+  e.preventDefault();
+  const rec = {};
+  document.querySelectorAll('#fields [data-i]').forEach(el => {
+    const c = cols[+el.dataset.i];
+    rec[c] = el.type === 'checkbox' ? (el.checked ? el.dataset.v : null) : (el.value.trim() || null);
+  });
+  askPolera(async n => {
+    if (saving) return; saving = true;
+    try {
+      await api('register', { record: rec, cantidad: n });
+      toast('Inscripción guardada y asistencia confirmada');
+      closeModal(); show('home'); $('#q').value = '';
+    } catch (err) { toast(err.message, true); closeModal(); }
+    saving = false;
+    await loadData().catch(() => {});
+  });
+});
+
+/* ---------- exportar ---------- */
+$('#b-exp').onclick = () => {
+  if (!rows.length) { toast('No hay registros para exportar', true); return; }
+  const data = rows.map(r => {
+    const o = {};
+    cols.forEach(c => o[c] = r[c] ?? '');
+    o['Asistencia confirmada'] = r.asistencia_confirmada ? 'Sí' : 'No';
+    o['Poleras entregadas'] = r.polera_cantidad || 0;
+    return o;
+  });
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(data), 'Inscripciones');
+  XLSX.writeFile(wb, 'inscripciones_corrida_2026.xlsx');
+};
+
+/* ---------- inicio ---------- */
+if (token) enter(); else show('login');
+</script>
+</body>
+</html>
