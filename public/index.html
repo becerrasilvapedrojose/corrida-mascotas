@@ -258,9 +258,11 @@ $('#q').addEventListener('keydown', e => {
 const scrollHi = () => document.querySelector('.res.on')?.scrollIntoView({ block: 'nearest' });
 $('#results').addEventListener('click', e => {
   const b = e.target.closest('.res'); if (!b) return;
-  hi = +b.dataset.i; renderResults($('#q').value); $('#q').focus();
+  hi = +b.dataset.i; 
+  document.querySelectorAll('.res').forEach(el => el.classList.remove('on'));
+  b.classList.add('on');
+  openSelected();
 });
-$('#results').addEventListener('dblclick', e => { if (e.target.closest('.res')) openSelected(); });
 $('#b-search').onclick = openSelected;
 function openSelected() {
   if (!results.length) { toast('Escribe algo y elige un registro', true); return; }
